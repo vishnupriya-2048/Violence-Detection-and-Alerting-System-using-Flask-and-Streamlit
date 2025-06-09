@@ -25,9 +25,9 @@ RUN apt-get update && \
     libmysqlclient-dev \
     libsndfile1 \
     python3-dev \
-    libproj-dev \   # For basemap and other GIS libraries
-    libgeos-dev \   # For basemap and other GIS libraries
-    ca-certificates && \ # Ensures apt-get update works securely
+    libproj-dev \
+    libgeos-dev \
+    ca-certificates && \
     rm -rf /var/lib/apt/lists/*
 
 # Copy the shared requirements.txt from the project root to the container's /app directory
