@@ -1,0 +1,40 @@
+# .gitignore
+# Files and directories to exclude from Git version control
+
+# Python virtual environment directory
+venv/
+
+# Python bytecode cache directories
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Local environment variables file (contains secrets, NEVER commit this!)
+.env
+
+# Local SQLite database folder (local development database)
+instance/
+
+# Editor/IDE specific files (e.g., VS Code)
+.vscode/
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints
+
+# pytest cache directory
+.pytest_cache
+
+# Operating System generated files
+.DS_Store
+Thumbs.db
+
+# Any temporary files or logs that should not be tracked
+tmp/
+*.log
+
+# Docker-related artifacts that are generated
+*.dockerignore
+# If you build images locally and want to ignore specific outputs:
+# dist/
+# build/
