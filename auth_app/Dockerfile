@@ -5,7 +5,7 @@ FROM python:3.9-buster
 WORKDIR /app
 
 # Install system dependencies required by various Python packages
-# This is crucial for packages like OpenCV, TensorFlow, PyTorch, SciPy, Pillow, mysqlclient etc.
+# This is a comprehensive list for scientific, ML, image processing, GIS, and database libraries.
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
     build-essential \
@@ -22,11 +22,12 @@ RUN apt-get update && \
     zlib1g-dev \
     libpng-dev \
     libtiff-dev \
-    libatlas-base-dev \
-    liblapack-dev \
-    gfortran \
     libmysqlclient-dev \
-    libsndfile1 && \
+    libsndfile1 \
+    python3-dev \
+    libproj-dev \   # For basemap and other GIS libraries
+    libgeos-dev \   # For basemap and other GIS libraries
+    ca-certificates && \ # Ensures apt-get update works securely
     rm -rf /var/lib/apt/lists/*
 
 # Copy the shared requirements.txt from the project root to the container's /app directory
@@ -35,8 +36,7 @@ COPY requirements.txt .
 # Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the entire contents of the 'auth_app' directory (where this Dockerfile is)
-# into the /app directory in the container
+# Copy the entire contents of the 'auth_app' directory
 COPY auth_app/ .
 
 # Command to run your Flask application
