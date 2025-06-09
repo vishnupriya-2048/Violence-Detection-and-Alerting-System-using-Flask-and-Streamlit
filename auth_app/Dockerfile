@@ -1,11 +1,35 @@
-# Use a Python 3.9 slim image for a smaller footprint
+# Use a Python 3.9 buster image
 FROM python:3.9-buster
 
 # Set the working directory inside the container
 WORKDIR /app
 
+# Install system dependencies required by various Python packages
+# This is crucial for packages like OpenCV, TensorFlow, PyTorch, SciPy, Pillow, mysqlclient etc.
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+    build-essential \
+    pkg-config \
+    git \
+    ffmpeg \
+    libsm6 \
+    libxext6 \
+    libgl1-mesa-glx \
+    libxrender1 \
+    libfontconfig1 \
+    libfreetype6-dev \
+    libjpeg-dev \
+    zlib1g-dev \
+    libpng-dev \
+    libtiff-dev \
+    libatlas-base-dev \
+    liblapack-dev \
+    gfortran \
+    libmysqlclient-dev \
+    libsndfile1 && \
+    rm -rf /var/lib/apt/lists/*
+
 # Copy the shared requirements.txt from the project root to the container's /app directory
-# (This assumes requirements.txt is in your_project_root/ )
 COPY requirements.txt .
 
 # Install Python dependencies
