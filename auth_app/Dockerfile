@@ -1,5 +1,5 @@
 # Use a Python 3.9 slim image for a smaller footprint
-FROM python:3.9-slim-buster
+FROM python:3.9-buster
 
 # Set the working directory inside the container
 WORKDIR /app
