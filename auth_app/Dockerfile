@@ -1,11 +1,12 @@
-# Use a Python 3.9 buster image
+# Use a Python 3.9 buster image for a balance of size and compatibility
 FROM python:3.9-buster
 
 # Set the working directory inside the container
 WORKDIR /app
 
-# Install minimal system dependencies
-# These are still important for Python development files, Git, and secure connections.
+# Install minimal essential system dependencies
+# These are crucial for Python development files, Git, and secure connections.
+# This list is designed to be highly reliable.
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
     python3-dev \
@@ -13,8 +14,8 @@ RUN apt-get update && \
     ca-certificates && \
     rm -rf /var/lib/apt/lists/*
 
-# Install ONLY the necessary Python dependencies for the Flask app directly
-# The original requirements.txt in your repo will NOT be used for this service.
+# Install ONLY the necessary Python dependencies for the Flask app directly.
+# This bypasses copying the main requirements.txt and its complex dependencies.
 RUN pip install --no-cache-dir \
     Flask==3.0.0 \
     Flask-Login==0.6.3 \
@@ -33,7 +34,7 @@ RUN pip install --no-cache-dir \
     # mysqlclient==2.2.0
 
 # Copy the entire contents of the 'auth_app' directory (where this Dockerfile is located)
-# into the /app directory in the container
+# into the /app directory in the container.
 COPY auth_app/ .
 
 # Command to run your Flask application
