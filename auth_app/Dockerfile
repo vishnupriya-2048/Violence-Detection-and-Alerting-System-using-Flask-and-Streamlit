@@ -11,7 +11,7 @@ RUN apt-get update && \
     python3-dev \
     git \
     ca-certificates \
-    libmysqlclient-dev && \  # <--- THIS IS THE CRUCIAL ADDITION FOR MYSQLCLIENT
+    libmysqlclient-dev && \
     rm -rf /var/lib/apt/lists/*
 
 # Install ONLY the necessary Python dependencies for the Flask app directly.
@@ -30,11 +30,11 @@ RUN pip install --no-cache-dir \
     click==8.1.7 \
     colorama==0.4.6 \
     blinker==1.7.0 \
-    mysqlclient==2.2.0 # <--- This is now active and requires the above system dep
+    mysqlclient==2.2.0
 
 # Copy the entire contents of the 'auth_app' directory (where this Dockerfile is located)
 # into the /app directory in the container.
 COPY auth_app/ .
 
-# Command to run your Flask application
-CMD ["python", "app.py"]
+# Command to run your Flask application using Gunicorn, binding to 0.0.0.0:$PORT
+CMD gunicorn auth_app.app:app --bind 0.0.0.0:$PORT
