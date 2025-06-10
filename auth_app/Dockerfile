@@ -11,7 +11,7 @@ RUN apt-get update && \
     python3-dev \
     git \
     ca-certificates \
-    libmysqlclient-dev && \
+    default-libmysqlclient-dev && \  # <--- CHANGED THIS LINE
     rm -rf /var/lib/apt/lists/*
 
 # Install ONLY the necessary Python dependencies for the Flask app directly.
