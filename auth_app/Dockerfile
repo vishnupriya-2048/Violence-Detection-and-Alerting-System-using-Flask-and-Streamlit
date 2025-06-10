@@ -37,4 +37,4 @@ RUN pip install --no-cache-dir \
 COPY auth_app/ .
 
 # Command to run your Flask application using Gunicorn, binding to 0.0.0.0:$PORT
-CMD gunicorn auth_app.app:app --bind 0.0.0.0:$PORT
+CMD gunicorn auth_app:app --bind 0.0.0.0:$PORT
