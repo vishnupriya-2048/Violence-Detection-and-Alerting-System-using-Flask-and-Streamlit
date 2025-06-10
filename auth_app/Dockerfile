@@ -5,17 +5,17 @@ FROM python:3.9-buster
 WORKDIR /app
 
 # Install minimal essential system dependencies
-# These are crucial for Python development files, Git, and secure connections.
-# This list is designed to be highly reliable.
+# These are crucial for Python development files, Git, secure connections, and MySQL client.
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
     python3-dev \
     git \
-    ca-certificates && \
+    ca-certificates \
+    libmysqlclient-dev && \  # <--- THIS IS THE CRUCIAL ADDITION FOR MYSQLCLIENT
     rm -rf /var/lib/apt/lists/*
 
 # Install ONLY the necessary Python dependencies for the Flask app directly.
-# This bypasses copying the main requirements.txt and its complex dependencies.
+# mysqlclient is now included and uncommented here.
 RUN pip install --no-cache-dir \
     Flask==3.0.0 \
     Flask-Login==0.6.3 \
@@ -30,8 +30,7 @@ RUN pip install --no-cache-dir \
     click==8.1.7 \
     colorama==0.4.6 \
     blinker==1.7.0 \
-    # Uncomment the line below ONLY if your Flask app directly connects to MySQL:
-    # mysqlclient==2.2.0
+    mysqlclient==2.2.0 # <--- This is now active and requires the above system dep
 
 # Copy the entire contents of the 'auth_app' directory (where this Dockerfile is located)
 # into the /app directory in the container.
