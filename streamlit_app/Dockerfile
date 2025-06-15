@@ -26,19 +26,18 @@ RUN apt-get update && \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy the Streamlit app's specific requirements.txt
-# This assumes your requirements.txt is in the streamlit_app/ directory locally
-COPY streamlit_app/requirements.txt ./requirements.txt
+# Now simply 'requirements.txt' because the build context is 'streamlit_app/'
+COPY requirements.txt ./requirements.txt
 
 # Install Python dependencies from the Streamlit app's requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the entire contents of the 'streamlit_app' directory locally
-# (which contains app.py, models/, etc.) into the /app directory in the container
-COPY streamlit_app/ .
+# Copy the entire contents of the current build context (streamlit_app/)
+# into the /app directory in the container. This includes app.py, models/, etc.
+COPY . .
 
 # Expose the port Streamlit will run on (Render automatically uses $PORT)
 EXPOSE 8080
 
 # Command to run your Streamlit application
-# Streamlit will listen on the port provided by Render ($PORT)
 CMD ["streamlit", "run", "app.py", "--server.port", "8080", "--server.enableCORS", "false", "--server.enableXsrfProtection", "false"]
