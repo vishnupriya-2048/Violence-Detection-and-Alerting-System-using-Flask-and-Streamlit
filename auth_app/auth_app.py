@@ -1,5 +1,5 @@
 import os
-from dotenv import load_dotenv # Import load_dotenv for .env file support
+from dotenv import load_dotenv
 from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
@@ -17,8 +17,10 @@ app = Flask(__name__)
 # 'fallback_dev_key' is only for local testing if the env var isn't set.
 app.config['SECRET_KEY'] = os.environ.get('FLASK_SECRET_KEY', 'a_fallback_dev_key_if_env_not_set')
 
-# Database configuration. For production, consider using a managed database service.
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
+# Database configuration.
+# CHANGED: Now using DATABASE_URL from environment variable for production,
+#          falling back to SQLite only if DATABASE_URL is not set (for local dev).
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL') or 'sqlite:///site.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # Initialize SQLAlchemy
@@ -53,7 +55,18 @@ class User(UserMixin, db.Model):
 @login_manager.user_loader
 def load_user(user_id):
     """Loads a user from the database given their ID."""
+    # Consider updating to db.session.get(User, int(user_id)) for SQLAlchemy 2.0+
     return User.query.get(int(user_id))
+
+# --- TEMPORARY CODE TO CREATE DATABASE TABLES ON APP STARTUP ---
+# This block runs when the app starts, creating tables if they don't exist.
+# IMPORTANT: After successful deployment and table creation, you MUST remove this block
+# and rely on manual migrations (Flask-Migrate/Alembic) for schema changes in the future.
+with app.app_context():
+    db.create_all()
+    print("Database tables created or already exist on startup.")
+# --- END TEMPORARY CODE ---
+
 
 # Login route
 @app.route('/')
@@ -125,9 +138,7 @@ def logout():
     return redirect(url_for('login')) # Redirect to the login page
 
 if __name__ == '__main__':
-    # Ensure database tables are created within the application context
-    with app.app_context():
-        db.create_all() 
-    # Run the Flask development server
-    # debug=True should be False in production
+    # When running locally, this block will execute db.create_all()
+    # On Render, the db.create_all() call is now at the global scope (above)
+    # to ensure it runs during app startup in the free tier.
     app.run(debug=True, port=5000)
