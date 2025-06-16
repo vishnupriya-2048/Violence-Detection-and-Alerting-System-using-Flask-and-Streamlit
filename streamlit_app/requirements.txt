@@ -1,0 +1,15 @@
+streamlit==1.28.0
+opencv-python-headless==4.8.1.78
+ultralytics==8.0.196
+cvzone==1.6.1
+python-dotenv==1.0.0
+requests==2.31.0
+SQLAlchemy==1.4.46
+psycopg2-binary==2.9.7
+numpy==1.24.1
+Pillow==10.0.0
+torch==2.0.1+cpu
+torchvision==0.15.2+cpu
+streamlit-webrtc==0.45.0
+av==10.0.0
+aiortc==1.5.0
