@@ -1,16 +1,8 @@
-# Use a Python 3.9 slim image for a smaller image size
 FROM python:3.9-slim-buster
 
-# Set the working directory inside the container
 WORKDIR /app
 
-# Install system dependencies needed for:
-# - libgl1: OpenCV (cv2) in a headless environment
-# - libpq-dev: PostgreSQL client libraries for psycopg2-binary
-# - git, ca-certificates: General utilities and secure connections
-# - build-essential, cmake: Often needed for packages with C/C++ extensions, including aiortc
-# - ffmpeg: Sometimes helpful for video processing with OpenCV/av
-# - libsdl2-dev, libopus-dev, libvpx-dev: Additional libraries for aiortc's WebRTC functionalities
+# Install system dependencies
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
     libgl1 \
@@ -25,18 +17,22 @@ RUN apt-get update && \
     libvpx-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy requirements from root level (when building from repo root)
+# Copy requirements.txt (now in same folder as Dockerfile)
 COPY requirements.txt ./requirements.txt
 
-# Install Python dependencies from the requirements.txt
+# Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the entire contents of the current build context (streamlit_app/)
-# into the /app directory in the container. This includes app.py, models/, etc.
-COPY . .
+# Copy the streamlit application file
+COPY streamlit_app.py ./app.py
 
-# Expose the port Streamlit will run on (Render automatically uses $PORT)
+# Create models directory and copy YOLO models
+RUN mkdir -p models
+COPY VoilenceDetection/best.pt ./models/best.pt
+COPY yolov8n.pt ./models/yolov8n.pt
+
+# Expose port
 EXPOSE 8080
 
-# Command to run your Streamlit application
+# Run Streamlit
 CMD ["streamlit", "run", "app.py", "--server.port", "8080", "--server.enableCORS", "false", "--server.enableXsrfProtection", "false"]
