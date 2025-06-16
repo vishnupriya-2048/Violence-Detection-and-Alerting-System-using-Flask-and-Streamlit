@@ -66,8 +66,8 @@ if 'last_alert_time' not in st.session_state:
 # Load YOLO models (ensure these paths are correct in your Docker container)
 # IMPORTANT: These paths are relative to the WORKDIR /app in your Docker container.
 # Ensure your .pt files are placed in a 'models/' subdirectory INSIDE your streamlit_app/ folder.
-violenceDetect_model = YOLO("models/best.pt")
-person_model = YOLO("models/yolov8n.pt")
+violenceDetect_model = YOLO("VoilenceDetection/best.pt")
+person_model = YOLO("VoilenceDetection/yolov8n.pt")
 
 # Class names for YOLO model output
 classNames = ['NonViolence', 'Violence']
